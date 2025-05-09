@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | StoryBridge </title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <style>
+        body{
+            font-family: 'Montserrat';
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin-left: 100px;
+            padding: 0;
+        }
+        a:link, a:visited {
+            color: black;
+            text-decoration: none;
+        }
+
+        .headings{
+            display: inline-flex;
+            gap: 30px;
+        }
+
+        input {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #C29666;
+            border-radius: 5px;
+        }
+
+        .nameBlock{
+            display: flex;
+            gap: 20px;
+
+        }
+
+        .nameBlock label{
+            width: 150px;
+            
+        }
+        .nameField{
+            display: flex;
+            flex-direction: column;
+            width: 100%
+        }
+
+        
+        .button{
+            width: 100px;
+            padding: 10px;
+            background-color: #C29666;
+            color: #68261F;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            
+        }
+
+        .pageContent img{
+            width: 150px;
+            border-radius: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    {% include 'storyBridge/navbar.html' with page='editProfile' %}
+    <div class="pageContent">
+        <!-- headings that take users to either edit profile or account settings pages:  -->
+        <div class="headings">
+            <h3><a href="{%url 'storyBridge_editProfile' %}">Edit Profile  </a> </h3>
+            <h3> <a href="{%url 'storyBridge_accountSettings' %}"> Account Settings </a> </h3>
+        </div>
+        
+
+        <br><br> 
+        <h4>Edit your account </h4><br><br>
+
+        {% block content %}
+        
+         <form method="POST" action="{% url 'storyBridge_editProfile' %}" enctype="multipart/form-data"> <!--this allows img-->
+            {% csrf_token %}
+
+            <!-- checking to see if user has a profile img:  -->
+            {% if user.profile.profileImg %}                        
+                <img src="{{ user.profile.profileImg.url }}">
+                            
+            {% else %}                       
+                <img src="{% static 'storyBridge/profilePic.png' %}" alt="default profile icon">
+                        
+            {% endif %}
+
+            <!-- change profile image:  -->
+            {{ profileForm.as_p }}<br>
+
+            
+            <!-- update profile section:  -->
+            {{ userForm.username.label_tag }}<br>
+            {{ userForm.username }}
+            <br><br>
+            <!-- first name section:  -->
+            {{ userForm.first_name.label_tag }}<br>
+            {{ userForm.first_name }}
+            <br><br>
+
+            <!-- last name section:  -->
+            {{ userForm.last_name.label_tag }}<br>
+            {{ userForm.last_name }}<br><br>
+
+            <!-- email address section:  -->
+            {{ userForm.email.label_tag }}<br>
+            {{ userForm.email }}<br> 
+            
+            <!-- {{ userForm.password }} -->
+            
+            <br><br>
+            <button type="submit" class="button" onclick="return confirm ('Confirm changes?');"> 
+                Save 
+            </button>
+        </form>
+
+  
+        {% endblock %}
+
+        
+    </div>
+    
+</body>
+</html>

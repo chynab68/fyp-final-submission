@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books | StoryBridge </title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <style>
+        body{
+            font-family: 'Montserrat';
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin-left: 100px;
+            padding: 0;
+        }
+        a:link, a:visited {
+            color: black;
+            text-decoration: none;
+        }
+
+        .bookBlock{
+            /* width: 95%; */
+            width: 70%;
+            height: 100px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #C29666;
+            background-color: white;
+            border-radius: 5px;
+        }
+        .bookBlock img{
+            height: 100px;
+            border-radius: 5px;
+            
+        }
+    </style>
+</head>
+<body>
+    {% include 'storyBridge/navbar.html' with page='myBooks' %}
+
+    <div class="pageContent">
+        <h3> My Books </h3><br>
+        
+        <!-- currently reading section:  -->
+        <a href="{%url 'storyBridge_viewShelf' 'CR' %}" class="currentlyReading">
+            <h4> Currently Reading </h4>
+
+            <div class="bookBlock">
+
+                <!--  extract book data -->
+                {% for shelf in currentlyReading %}
+                    <!-- book cover:  -->
+                    <img src="{{ shelf.book.coverURL }}" alt="{{ shelf.book.bookTitle }}"> 
+
+                {% endfor %}
+            </div>
+        </a>
+
+        <br>
+
+
+        <!-- want to read section:  -->
+        <a href="{%url 'storyBridge_viewShelf' 'WTR' %}" class="wantToRead">
+            <h4> Want to Read</h4>
+            <div class="bookBlock">
+                <!--  extract book data -->
+                {% for shelf in wantToRead %}
+                    <!-- showing book cover:  -->
+                    <img src="{{ shelf.book.coverURL }}" alt="{{ shelf.book.bookTitle }}"> <!-- may need to change 'shelf' to 'bookshelf' -->
+                   
+                {% endfor %}
+            </div>
+        </a>
+        <br>
+
+
+        <!-- read section:  -->
+        <a href="{%url 'storyBridge_viewShelf' 'RD' %}" class="readSection">
+            <h4> Read </h4>
+            <div class="bookBlock">
+                <!--  extracted book data -->
+                {% for shelf in read %}
+                    <!-- showing book cover:  -->
+                    <img src="{{ shelf.book.coverURL }}" alt="{{ shelf.book.bookTitle }}"> <!-- may need to change 'shelf' to 'bookshelf' -->
+                   
+                {% endfor %}
+            </div>
+        </a><br>
+
+        <!-- DNF section:  -->
+        <a href="{%url 'storyBridge_viewShelf' 'DNF' %}" class="readSection">
+            <h4> Did Not Finish </h4>
+            <div class="bookBlock">
+                <!--  extracted book data -->
+                {% for shelf in didNotFinish %}
+                    <!-- showing book cover:  -->
+                    <img src="{{ shelf.book.coverURL }}" alt="{{ shelf.book.bookTitle }}"> 
+                   
+                {% endfor %}
+            </div>
+        </a>
+
+    </div>
+    
+</body>
+</html>
+
+<!-- NEED TO ADD STYLING WHEN I AM HOME TO IMAGE!!!!!!!!!!!! -->

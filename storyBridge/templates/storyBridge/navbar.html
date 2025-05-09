@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* main layout styling:  */
+        /* .overallContainer{
+            display: inline-flex;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            width: 100%;
+
+            position: relative;
+        }  */
+        
+
+        /* sidebar styling:  */
+        .sideBar{
+            width: 10%; 
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh; 
+            gap: 15px;
+            position: fixed;
+            left: 0;
+            top: 0; 
+        }
+
+        .sideBar img{
+            width: 30px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            margin-bottom: 50px;
+        } 
+
+        .sideBar img:hover{
+            transform: scale(1.1);
+        }
+
+        .navbarPlusPageContent{
+            display: inline-block;
+        }
+
+        /* navbar styling:  */
+        .navBar{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            height: 60px;
+            position: fixed;
+            width: 80%;
+            top: 0;
+            left: 80px;        
+            z-index: 3;
+        }
+
+        .navBar input{
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+            border: 1px solid #C29666;
+            border-radius: 5px;
+        }
+        .navBar img{ 
+            width: 40px;
+            height: 40px; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            margin-right: 0px;
+        }
+        .searchBar{
+            font-size: 17px;
+            width: 80%;
+            display: inline;
+            margin: auto;
+        }
+        .searchBar button{
+            width: 10%;
+            padding: 10px;
+            background: #68261F;
+            color: #F1EDE9;
+            font-size: 17px;
+            border: none;
+            border-radius: 5px;
+            border-left: none; /* Prevent double borders */
+            cursor: pointer;
+        }
+       
+        .overallDropdownContainer{
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .dropdownContent{
+            display: none;
+            position: absolute;
+            left: 0;
+            background-color: #68261F;
+            color: #F1EDE9;
+            width: 90px;
+            border-radius: 3px;
+            text-align: center;
+           
+        }
+        .dropdownContent a {
+            color: #F1EDE9;
+        }
+        .overallDropdownContainer:hover .dropdownContent {
+            display: block;
+        }
+       
+
+        .pageContent{ 
+            flex-grow: 1; 
+            margin-left: 100px;
+            padding: 20px;
+            padding-top: 80px;
+            width: 80%; 
+            
+            /* min-height: 100vh; THIS MESSES UP THE PAGE!!!! */
+            
+        }
+        .search-results {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            max-height: 300px;
+            overflow-y: auto;
+            width: 300px;
+            display: none;
+        }
+
+        .search-results .book-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-results img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+        
+        /* a:link, a:visited {
+            color: black;
+            text-decoration: none;
+        } */
+
+
+    </style>
+
+    <!-- icon library for serach image: -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    {% load static %}
+
+    <!-- main layout container:  -->
+    <div class="overallContainer">
+
+        <!-- sidebar: -->
+        <div class="sideBar">
+            {% if user.is_authenticated %}
+                
+                
+                
+                <div class="homeButton">
+                    <a href="{%url 'storyBridge_home' %}">
+                        <img src="{% static 'storyBridge/smallLogo.png' %}" alt="Logo">
+                    </a>
+                </div>
+            
+
+                <a href="{%url 'storyBridge_explore' %}"> 
+                    <img src="{% static 'storyBridge/explorePic.png' %}" alt="Image of a book">
+                </a>
+
+                <a href= "{%url 'storyBridge_myBooks' %}"> 
+                    <img src="{% static 'storyBridge/booksPic.png' %}" alt="Books">
+                </a>
+                
+
+            {% else %}
+                <a href="{%url 'storyBridge_home' %}">
+                    <img src="{% static 'storyBridge/smallLogo.png' %}" alt="Logo">
+                </a>
+            
+            
+            {% endif %}
+            
+        </div>
+
+        <!-- div that contains navbar + rest of page content:  -->
+        <div class="navbarPlusPageContent">
+
+            <!-- navbar : -->
+            <div class="navBar"> 
+                
+                <div class="searchBar">
+                    <form  action="{% url 'storyBridge_searchResults' %}" method="GET">
+                        <input type="text" name="query" placeholder="Search...">
+                        <button type="submit"> 
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                    
+                </div>
+
+                
+                {% if user.is_authenticated %}
+                    <div class="overallDropdownContainer">
+                        {% if user.profile.profileImg %}                        
+                            <img src="{{ user.profile.profileImg.url }}">
+                            
+                        {% else %}                       
+                            <img src="{% static 'storyBridge/profilePic.png' %}" alt="default profile icon">
+                        
+                        {% endif %}
+
+                        <div class="dropdownContent">
+                            <br>
+                            <a href="{%url 'storyBridge_profile' user.id %}"> Profile </a><br><br>
+                            <a href="{% url 'storyBridge_profileList' %}"> Profile List </a><br><br>
+                            <a href="{%url 'storyBridge_logout' %}"> Logout </a><br>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+                    <a href="{%url 'storyBridge_login' %}"> Login </a>
+                    <a href="{%url 'storyBridge_signup' %}"> Register  </a>
+
+                {% endif %}           
+                
+            </div>
+        
+            
+            <!-- page content: -->
+            <div class="pageContent">
+                <!-- <div id="navbarSearchResults" class="searchResults"> 
+
+                </div> -->
+            </div>
+        </div>
+
+
+        
+    </div>
+
+    <script>
+        //ADD COMMENTS WHAT DOES THIS DO ?????????? !!!!!!!!!
+
+        document.getElementById('bookSearchForm').addEventListener('submit', function(e){
+            e.preventDefault();
+
+            //const query = document.getElementById('navbarSearchResults').value.trim();
+            const query = document.querySelector('#bookSearchForm input').value.trim();
+            const resultsContainer = document.getElementById('navbarSearchResults');
+
+            if (!query) return; //return nothing if input is empty 
+
+            fetch(`/search-books/?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                resultsContainer.innerHTML = ''; // Clear old results
+                resultsContainer.style.display = 'block';
+
+                if (data.error) {
+                    resultsContainer.innerHTML = `<p>${data.error}</p>`;
+                } else {
+                    data.forEach(book => {
+                        resultsContainer.innerHTML += `
+                            <div class="book-item">
+                                <img src="${book.cover_url}" alt="${book.title}">
+                                <div>
+                                    <h4>${book.title}</h4>
+                                    <p>${book.author} (${book.first_publish_year})</p>
+                                    <a href="${book.openlibrary_url}" target="_blank">View on Open Library</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            })
+            .catch(error => {
+                resultsContainer.innerHTML = `<p>Error fetching books.</p>`;
+                console.error('Error:', error);
+            });
+        })
+    </script>
+   
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{shelfType}} shelf | StoryBridge </title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <style>
+        body{
+            font-family: 'Montserrat';
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin-left: 100px;
+            padding: 0;
+        }
+        a:link, a:visited {
+            color: black;
+            text-decoration: none;
+        }
+
+        .bookBlock{
+            width: 95%;
+            height: 100px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #C29666;
+            background-color: white;
+            border-radius: 5px;
+        }
+        .bookBlock{
+            display: flex;
+            gap: 20px;
+        }
+        .subButton,
+        .delButton{
+            width: fit-content;
+            padding: 10px;
+            background-color: #C29666;
+            color: #68261F;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            /* position: absolute; */
+            
+        }
+        .subButton{
+            float: left;
+        }
+        .delButton{
+            float: right;
+        }
+        .bookInfo{
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .bookTitle{
+            width: 25%;
+        }
+        .ratingBlock{
+            width: 10%;
+            display: block;
+        }
+        .bookBlock img{
+            border-radius: 5px;
+            height: 90%;
+            align-items: center;
+            
+        }   
+        
+        /* stars styling: */
+        .starRating {
+            direction: rtl; 
+            display: inline-flex;
+        }
+
+        .starRating input[type="radio"] {
+            display: none;
+        }
+
+        .starRating label {
+            font-size: 24px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+
+        .starRating label:hover,
+        .starRating label:hover ~ label {
+            color: #ffcc00;
+        }
+
+        /* Highlight stars for selected rating */
+        .starRating input[type="radio"]:checked ~ label {
+            color: #ffcc00;
+        }
+
+    </style>
+    <!-- icon library for serach image: -->
+    <script src="https://kit.fontawesome.com/9c6e3cbbfb.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+    {% include 'storyBridge/navbar.html' with page='bookshelf' %}
+    <div class="pageContent"> 
+        {% if books %}
+            <div class="titleSection"> 
+                <h3> {{shelfType}} Books </h3>
+                <!-- div for buttons -->
+                <div class="submitDeleteButton">
+
+                    <!-- button to delete selected book: -->
+                    <button form="delButton" type="submit" class="delButton"> 
+                        <!-- Delete  -->
+                        <i class="fa-solid fa-trash-can"></i>
+
+                    </button>
+                </div>
+                
+            </div>
+            <br><br><br>
+
+            <div class="shelf">
+            
+                    
+                        {% for entry in books %}
+
+                            <div class="bookBlock"> 
+                                <a href="{% url 'storyBridge_bookDetails' entry.book.bookKey %}">
+                                    <img src="{{ entry.book.coverURL }}" alt="{{ entry.book.bookTitle }}">
+                                </a>
+                                 
+                                
+
+                                <div class="bookInfo">
+                                    <div class="bookTitle">                                 
+                                        <h4> {{ entry.book.bookTitle }} </h4> 
+                                    </div> 
+
+                                    <p> {{ entry.book.author }} </p> 
+                                    <p> {{ entry.dateAddedToShelf }} </p> 
+
+
+                                            
+                                </div>
+
+                                <!-- form to delete books  from shelves: -->
+                                <form id="delButton" action="{% url 'storyBridge_deleteBookFromShelf' %}"method="POST">
+                                    {% csrf_token %}
+                                    <!-- check selection:-->
+                                    <input type="checkbox" class="bookCheckbox" name="chosenBook" value="{{ entry.id }}">
+                                </form>  
+
+                            </div>                                                
+                        {% endfor %}
+                    
+            </div>
+
+        {% else %}
+            <h3> {{shelfType}} Books </h3>
+            <p>No books currently in shelf! </p> <br>
+            <p>Explore and add some books to get started</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

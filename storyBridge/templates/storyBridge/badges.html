@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Badges | StoryBridge </title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin-left: 100px;
+            padding: 0;
+        }
+        .badgesBlock{
+            width: 45%;
+            height: auto;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #C29666;
+            background-color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'storyBridge/navbar.html' with page='badges' %}
+    <div class="pageContent"> 
+        <h3> {{ profile.user.username }}'s badges </h3><br>
+        <!-- the # refers to the year we're currently in- will be coded in later  -->
+        <h4> # Badges </h4>
+        
+        <!-- blocks for the badges that will be generated later (empty for now): -->
+        <div class="badgesBlock">
+            <h2> jsjjds</h2>
+        </div>
+
+    </div>
+</body>
+</html>

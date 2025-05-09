@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings | StoryBridge </title>
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <style>
+        body{
+            font-family: 'Montserrat';
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin-left: 100px;
+            padding: 0;
+        }
+        a:link, a:visited {
+            color: black;
+            text-decoration: none;
+        }
+
+        .headings{
+            display: inline-flex;
+            gap: 30px;
+        }
+
+        input {
+            width: 350px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #C29666;
+            border-radius: 5px;
+        }
+
+        .nameField{
+            display: flex;
+            flex-direction: column;
+            width: 100%
+        }
+        p{
+            width: 370px;
+        }
+
+        .paraAndSwitch{
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #68261F;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #68261F;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .button{
+            width: fit-content;
+            padding: 10px;
+            background-color: #C29666;
+            color: #68261F;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            
+        }
+        
+
+    </style>
+</head>
+<body>   
+
+    {% include 'storyBridge/navbar.html' with page='accountSettings' %}
+    
+    <div class="pageContent">
+        <!-- {% if messages %}
+            <div >
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %} -->
+        <!-- headings that take users to either edit profile or account settings pages:  -->
+        <div class="headings">
+            <h3><a href="{%url 'storyBridge_editProfile' %}">Edit Profile  </a> </h3>
+            <h3> <a href="{%url 'storyBridge_accountSettings' %}"> Account Settings </a> </h3>
+        </div>
+
+        <h4>Update your password </h4>
+
+    
+
+        <form method="POST" action="{% url 'storyBridge_accountSettings' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <br><br>
+            <div class="buttonContainer">
+                <button type="submit" class="button" onclick="return confirm ('Confirm changes?');"> 
+                    Save Password 
+                </button>
+            </div>
+        </form>
+        
+        
+
+
+
+        <!-- container for profile visbility: -->
+        <!-- <div class="profVisibility">
+            <h4>Your Account</h4>
+            <p> Manage who can view your profile.</p>
+            <h5>Private profile</h5>
+
+            <div class="paraAndSwitch">
+                <p> When profile is private, only approved people can see your profile, reviews, followers and following lists. </p>
+
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+        </div> -->
+
+        
+
+
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Comment | StoryBridge</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <style>
+        body{
+            font-family: 'Montserrat';
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin-left: 100px;
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="pageContent">
+        <h3> Add Comment </h3><br><br>
+
+        <!-- form that lets users add a post-  -->
+        <div class="addCommentForm">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit"> Add Comment </button>
+            </form>
+        </div>
+
+
+    </div>
+</body>
+</html>

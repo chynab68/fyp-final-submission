@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{book.title}} details | StoryBridge </title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <style>
+        body{
+            font-family: 'Montserrat';
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #F1EDE9;
+            margin-left: 50px;
+            padding-top: 100px;
+        }
+        .book{
+            display: flex; 
+            justify-content: center; 
+            align-items: top;  
+            /* min-height: 80vh;  */
+            padding: 10px;
+            /* padding-top: 200px; */
+        }
+        .button,
+        .inputReviews button{
+            width: fit-content;
+            padding: 10px;
+            background-color: #C29666;
+            color: #68261F;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            
+        }
+        .coverPlusReview{
+            width: 350px;
+        }
+        .coverPlusReview img{
+            border-radius: 10px;
+        }
+        
+        .inputReviews{
+            background: white;
+            border: 1px solid #C29666;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 300px;
+        }
+        .updateCreateReviewContainer form{
+            justify-content: center;
+            width: 280px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .bookDetails{
+            /* margin-left: 20px; */
+            width: 50%;
+        }
+        .authorInfoShelfChoice{
+            width: 60%;
+            display: inline-flex;
+            gap: 50px;
+            align-items: baseline;
+        }
+        .addToShelfContainer{
+            display: block;
+        }
+        .addToShelfContainer button{
+            float: right;
+        }
+        .star{
+            font-size: 2em;
+            color: gray;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .star.selected{
+            color: gold;
+        }
+
+        
+    </style>
+</head>
+<body>
+    {% include 'storyBridge/navbar.html' with page='bookDetails' %}
+
+    {% block content %}
+        <div class="mainContent"> 
+             {% if book %} <!--check if book exists on open library  -->
+                <div class="book">
+                    <div class="coverPlusReview">
+                        {% if book.cover_url %}
+                            <img src=" {{book.cover_url}} " alt=" {{book.title}} ">
+                        {% else %}
+                            <h3>No book found </h3>
+                        {% endif %}
+                        <br><br>
+                        <div class="inputReviews">
+                            <h4> What do you think?</h4>
+                            
+                            <!-- review section: -->
+                            <form method="POST">
+                                {% csrf_token %}                               
+
+                                <!-- star rating section- -->
+                                <div class="starRating">
+                                    <span class="star" data-value="1">&#9733;</span>
+                                    <span class="star" data-value="2">&#9733;</span>
+                                    <span class="star" data-value="3">&#9733;</span>
+                                    <span class="star" data-value="4">&#9733;</span>
+                                    <span class="star" data-value="5">&#9733;</span>
+                                    <!-- {% for i in "54321" %}
+                                        <span class="star" data-value="{{ i }}">&#9733;</span>
+                                    {% endfor %} -->
+                                </div>
+
+                                {{ form.rating }}<br>
+                                {{ form.body }}
+                                <br><br>
+                                <button type="submit">Submit review</button><br><br>
+
+                            </form>
+
+
+
+
+                            <!-- if user has already createed a review, show review + give choice to update it- -->
+                            <!-- {% if existingReview %}
+                                <h4> Your Review: </h4>
+                                <p> {{ existingReview.body }} </p> -->
+
+                                <!-- update review button-  -->
+                                <!-- <details>
+                                    <summary>Edit your review </summary>
+                                    <div class="updateCreateReviewContainer">
+                                       <form method="POST">
+                                            {% csrf_token %}
+                                            {{ form.as_p }}
+                                            <button type="submit" class="button"> Update review </button><br><br>
+
+                                        </form> 
+                                    </div>
+                                
+                                </details> -->
+
+                            <!-- else, form to create review-  -->
+                            <!-- {% else %}
+                                <strong>Create a review</strong>
+                                <div class="updateCreateReviewContainer">
+                                    {% if form %}
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            {{ form.as_p }}
+                                            <button type="submit" class="button"> Submit review</button><br><br>
+                                        </form> 
+                                    {% endif %}
+                                </div>
+                            {% endif %}   -->
+
+                        </div>
+                    </div>
+                    
+
+                    <div class="bookDetails">
+
+                        <h2> {{book.title}} </h2>
+
+                        <!-- section that allows user to pick their reading progress: -->
+                        <div class="authorInfoShelfChoice">
+                            <p> <strong> {{book.authors|join:","}} </strong> </p> 
+                            <div class="addToShelfContainer">
+                                <form id="bookshelfForm" method="POST" action="{% url 'storyBridge_addToShelf' book.book_key %} ">
+                                    {% csrf_token %}
+                                    <label for="bookshelf">Add to a shelf? </label>
+                                    <select name="bookshelfChoice" id="Books">
+                                        <option value="WTR">Want to Read</option>
+                                        <option value="CR">Currently Reading</option>
+                                        <option value="RD">Read</option>
+                                        <option value="DNF">Did Not Finish </option>
+                                    </select><br><br> 
+                                    <button type="submit" class="button"> Add </button>
+
+                                </form>  
+                            </div>
+                            
+                                                
+                        </div>
+                        <br><br>
+
+                        <p> <i>{{book.publish_date}}  </i></p>  
+                        <p> {{book.description}} </p>
+
+                        
+                    </div>
+                   
+                    
+                    
+                </div>
+              
+
+            {% else %}
+                <p> {{error}} </p>
+            
+            {% endif %}
+        </div>
+
+    {% endblock %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        let bookshelfDropdown = document.getElementById("bookshelf");
+        
+        if (bookshelfDropdown) {
+            bookshelfDropdown.addEventListener("change", function () {
+                console.log("Selection changed to:", bookshelfDropdown.value);
+            });
+        } 
+        else {
+            console.error("Dropdown not found!");  // Debugging help
+        }
+
+        //star behaviour:
+        const stars = document.querySelectorAll('.starRating .star');
+        const ratingInput = document.querySelector('input[name="rating"]');
+        const currentRating = parseInt(ratingInput.value);
+
+        if (currentRating > 0) {
+            stars.forEach((s) => {
+                if (parseInt(s.dataset.value) <= currentRating) {
+                    s.classList.add("selected");
+                }
+            });
+        }
+
+        stars.forEach((star) => {
+                star.addEventListener('click', () => {
+                    const selectedRating = parseInt(star.getAttribute('data-value'));
+                    ratingInput.value = selectedRating;
+
+                    
+                    stars.forEach((s) => {
+                        const starValue = parseInt(s.getAttribute('data-value'));
+                        if (starValue <= selectedRating) {
+                            s.classList.add('selected');
+                        } else {
+                            s.classList.remove('selected');
+                        }
+                    });
+                });
+            });
+        });
+
+        //star behaviour:
+        // document.addEventListener("DOMContentLoaded", function () {
+        //     const stars = document.querySelectorAll('.star-rating .star');
+        //     const ratingInput = document.querySelector('input[name="rating"]');
+
+        //     stars.forEach((star) => {
+        //         star.addEventListener('click', () => {
+        //             const selectedRating = parseInt(star.getAttribute('data-value'));
+        //             ratingInput.value = selectedRating;
+
+                    
+        //             stars.forEach((s) => {
+        //                 const starValue = parseInt(s.getAttribute('data-value'));
+        //                 if (starValue <= selectedRating) {
+        //                     s.classList.add('selected');
+        //                 } else {
+        //                     s.classList.remove('selected');
+        //                 }
+        //             });
+        //         });
+        //     });
+        // });
+    </script>
+
+</body>
+</html>

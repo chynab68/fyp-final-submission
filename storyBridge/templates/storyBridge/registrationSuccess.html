@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoryBridge - Registration complete</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        setTimeout(function() {
+        window.location.href = "{% url 'storyBridge_home' %}"; // Redirect to home page
+    }, 3000); // 5000ms = 5 seconds
+    </script>
+</head>
+<body>
+    <p> you've successfully signed up! </p>
+</body>
+</html>

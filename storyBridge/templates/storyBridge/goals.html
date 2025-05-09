@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Goals | StoryBridge </title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            background-color: #F1EDE9;
+            flex-direction: column;
+            margin-left: 100px;
+            padding: 0;
+        }
+        a:link, a:visited {
+            color: black;
+            text-decoration: none;
+        }
+        .track{
+            display: inline-flex;
+            gap: 20px;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 100%;
+        }
+
+        .readingChallenge,
+        .streak{
+            width: 45%;
+            height: auto;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #C29666;
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        
+        .readingChallenge img {
+            width: 200px; 
+            height: auto;
+            margin-right: 15px;
+        }
+
+        .challengePopUp{
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 1000; /* On top of everything */
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Dim background */
+        }
+
+        .popUpContent{
+            background-color: #fefefe;
+            margin: 10% auto; /* Center the modal */
+            padding: 20px;
+            border: 1px solid #C29666;
+            width: 40%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        }
+        .rcTextBlock{
+            display: inline-block;
+            text-align: left;
+            margin-right: 100px;
+        }
+
+        .streak{
+            justify-content: space-between;
+        }
+        .streak img {
+            width: 100px; /* Adjust as needed */
+            height: auto;
+            margin-left: 15px; /* Push image to the right */
+        }
+       
+        .strText{
+            display: inline-block;
+            text-align: right;
+            margin-left: 50px;
+        }
+
+        .engagementBlock,
+        .discoveryGoals{
+            width: 45%;
+            height: auto;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #C29666;
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            display: inline-block;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/9c6e3cbbfb.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% include 'storyBridge/navbar.html' with page='goals' %}
+    <div class="pageContent">
+
+        <h3> {{ profile.user.username }}'s goals </h3><br>
+        <!-- block for streak and reading challenge info:  -->
+        <div class="track">
+
+            <!-- block for reading challenge: -->
+            <div class="readingChallenge">
+                <!-- button that lets users enter their reading goal: -->
+                <button onclick="document.getElementById('challengeModal').style.display='block'">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button><br>
+
+                <img src="{% static 'storyBridge/readingGoals.png' %}" alt="Goals">
+
+
+                <!-- block so that writing can be altered seperate to rest of block : -->
+                <div class="rcTextBlock">
+                    <h4> Reading Challenge </h4>
+
+                    <!-- progress will be updated everytime user completes a book  -->
+                    <br><small> {{ challenge.booksRead }} / {{ challenge.goal }} books read</small>
+                </div>
+
+                
+
+            </div>
+
+            <!-- modal that appears when clicked on- -->
+            <div id="challengeModal" class="challengePopUp" style="display: none;">
+                <div class="popUpContent" style="background: white; padding: 20px;">
+                    <!-- close popup button- -->
+                    <button onclick="document.getElementById('challengeModal').style.display='none'">
+                        <i class="fa-solid fa-xmark"></i> 
+                    </button>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <!-- tick button-  -->
+                        <button type="submit">
+                            <i class="fa-solid fa-check"></i> 
+                        </button>
+                    </form>
+                    
+                </div>
+
+            </div>
+
+
+
+            <!-- block for streak: -->
+            <!-- <div class="streak">
+                
+                <div class="strText">
+                    
+                    <h2>#</h2>
+                    
+                    <b>  streak!</b><br><br>
+                    <small> made progress? <br><b><a href="#">Update streak</a></b></small><br>
+                </div>
+                
+                 <img src="{% static 'storyBridge/streak.png' %}" alt="Flame">
+            </div> -->
+        </div>
+
+        <!-- block for goals: -->
+        <div class="goals ">
+            <!-- block for engagement goals:  -->
+            <div class="engagementBlock"> 
+                <h4> Engagement Goals</h4>
+                <!-- these will auto populated  -->
+            </div>
+
+            <!-- block for discovery goals:  -->
+             <div class="discoveryGoals">
+                <h4> Discovery Goals </h4>
+                <!-- these will auto populated  -->
+
+             </div>
+        </div>
+    </div>
+    <script>
+        const modal = document.getElementById('challengeModal');
+
+        // close popup when user clicks outside box
+        window.onclick = function(event){
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+    </script>
+</body>
+</html>
